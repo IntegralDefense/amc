@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# a very simple way to watch for postfix exploits running a process we don't expect
+#
+
+nohup strace -p $(ps axuw | grep '/usr/lib/postfix/master' | grep -v grep | awk '{print $2}') -f -e execve 2>&1 | grep '^\[pid' | grep -v \
+        -e SIGCHLD \
+        -e SIGPIPE \
+        -e SIGTERM \
+        -e '+++ exited with ' \
+        -e '+++ killed by' \
+        -e '^Process' \
+        -e '^) = ' \
+        -e 'execve resumed' \
+        -e '<unfinished ...>' \
+        -e '/usr/lib/postfix' \
+        -e '/opt/amc/bin/amc' \
+        -e '/sbin/ldconfig' >> /opt/amc/logs/execve.log &

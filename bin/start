@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+
+# the owner of the /opt/amc directory should be the running user
+# TODO
+
+cd /opt/amc
+bin/amc -d
